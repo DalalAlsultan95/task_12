@@ -3,6 +3,8 @@ from .models import Restaurant, Item
 from .forms import RestaurantForm, ItemForm, SignupForm, SigninForm
 from django.contrib.auth import login, authenticate, logout
 
+
+
 def no_access(request):
     return render(request, 'no_access.html')
 
@@ -45,8 +47,18 @@ def signout(request):
     logout(request)
     return redirect("signin")
 
+
+
 def restaurant_list(request):
-    context = {
+    restuaran = Restaurant.objects.all()
+    query = request.GET.get("q")
+    if query:
+        restaurant = restaurant.object.filter(
+            Q(name__contains=query)|
+            Q(name__ownername_contains=query)|
+            Q(description_contains=query))
+
+        context = {
         "restaurants":Restaurant.objects.all()
     }
     return render(request, 'list.html', context)
